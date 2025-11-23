@@ -211,7 +211,7 @@ class OrderService {
     const [orders, total] = await Promise.all([
       Order.find(query)
         .populate('user', 'name email')
-        .populate('items.product', 'name category brand')
+        .populate('items.product', 'name mainCategory subCategory images')
         .sort(sortOptions)
         .limit(parseInt(limit))
         .skip(skip),

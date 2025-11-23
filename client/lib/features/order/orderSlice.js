@@ -19,7 +19,7 @@ export const createOrder = createAsyncThunk(
   async (orderData, { rejectWithValue }) => {
     try {
       const token = getAuthToken();
-      const response = await fetch(`${API_BASE_URL}/orders`, {
+      const response = await fetch(`${API_BASE_URL}/order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ export const createOrder = createAsyncThunk(
 
 // Get User Orders
 export const getUserOrders = createAsyncThunk(
-  'orders/getUserOrders',
+  'order/my-orders',
   async ({ page = 1, limit = 10, status, sortBy = 'createdAt', sortOrder = 'desc' }, { rejectWithValue }) => {
     try {
       const token = getAuthToken();
@@ -56,7 +56,7 @@ export const getUserOrders = createAsyncThunk(
         sortOrder,
       });
 
-      const response = await fetch(`${API_BASE_URL}/orders/my-orders?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/order/my-orders?${params}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

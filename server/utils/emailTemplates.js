@@ -444,7 +444,7 @@ export const orderConfirmationTemplate = (order, userName) => {
         <!-- Footer -->
         <div class="footer">
           <p>Merci de votre confiance !</p>
-          <p class="contact">Pour toute question, contactez-nous à : contact@hajicosmetiques.com</p>
+          <p class="contact">Pour toute question, contactez-nous à : glamour@gmail.com</p>
         </div>
         
       </div>
@@ -509,6 +509,6 @@ PROCHAINES ÉTAPES :
 
 Merci de votre confiance !
 
-Support : contact@hajicosmetiques.com
+Support : glamour@gmail.com
   `;
 };

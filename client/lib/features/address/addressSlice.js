@@ -1,18 +1,33 @@
-import { addressDummyData } from '@/assets/assets'
 import { createSlice } from '@reduxjs/toolkit'
 
+const persistedAddresses =
+  typeof window !== 'undefined'
+    ? JSON.parse(localStorage.getItem('addresses') || '[]')
+    : [];
+
 const addressSlice = createSlice({
-    name: 'address',
-    initialState: {
-        list: [addressDummyData],
+  name: 'address',
+  initialState: {
+    list: persistedAddresses,
+  },
+  reducers: {
+    addAddress: (state, action) => {
+      state.list.push(action.payload);
+      localStorage.setItem('addresses', JSON.stringify(state.list));
     },
-    reducers: {
-        addAddress: (state, action) => {
-            state.list.push(action.payload)
-        },
+    updateAddress: (state, action) => {
+      const index = state.list.findIndex(addr => addr.id === action.payload.id);
+      if (index !== -1) {
+        state.list[index] = action.payload;
+        localStorage.setItem('addresses', JSON.stringify(state.list));
+      }
+    },
+    clearAddresses: (state) => {
+      state.list = [];
+      localStorage.removeItem('addresses');
     }
-})
+  }
+});
 
-export const { addAddress } = addressSlice.actions
-
-export default addressSlice.reducer
+export const { addAddress, updateAddress, clearAddresses } = addressSlice.actions;
+export default addressSlice.reducer;

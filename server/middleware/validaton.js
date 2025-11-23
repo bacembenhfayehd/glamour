@@ -98,7 +98,7 @@ const schemas = {
     mainCategory: joi
       .string()
       .valid("Homme", "Femme", "Enfant")
-      .required()
+      .optional()
       .messages({
         "any.only": "Main category must be one of: Homme, Femme, Enfant",
         "any.required": "Main category is required",
@@ -117,7 +117,7 @@ const schemas = {
         "Garçon",
         "Fille" // Enfant
       )
-      .required()
+      .optional()
       .messages({
         "any.only": "Invalid subcategory. Must be one of the predefined values",
         "any.required": "Sub category is required",

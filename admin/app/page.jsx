@@ -1,40 +1,58 @@
 'use client'
-import { dummyAdminDashboardData } from "@/assets/assets"
+
 import Loading from "@/components/Loading"
 import OrdersAreaChart from "@/components/OrdersAreaChart"
-import { CircleDollarSignIcon, ShoppingBasketIcon, StoreIcon, TagsIcon } from "lucide-react"
+import { useAdmin } from "@/context/AdminContext"
+import { CircleDollarSignIcon, ShoppingBasketIcon, StoreIcon, TagsIcon, User } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export default function AdminDashboard() {
+  const { 
+    dashboardStats, 
+    orders,
+    loading, 
+    error,
+    fetchDashboardData 
+  } = useAdmin();
 
-    const currency = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$'
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
-    const [loading, setLoading] = useState(true)
-    const [dashboardData, setDashboardData] = useState({
-        products: 0,
-        revenue: 0,
-        orders: 0,
-        stores: 0,
-        allOrders: [],
-    })
+  const dashboardCardsData = [
+    { 
+      title: 'Total Produits', 
+      value: dashboardStats.totalProducts, 
+      icon: ShoppingBasketIcon 
+    },
+    { 
+      title: 'Total Revenues', 
+      value: `${dashboardStats.totalRevenue.toFixed(2)} DT`, 
+      icon: CircleDollarSignIcon 
+    },
+    { 
+      title: 'Total Commandes', 
+      value: dashboardStats.totalOrders, 
+      icon: TagsIcon 
+    },
+    { 
+      title: 'Total Clients', 
+      value: dashboardStats.totalUsers, 
+      icon: User 
+    },
+  ];
 
-    const dashboardCardsData = [
-        { title: 'Total Products', value: dashboardData.products, icon: ShoppingBasketIcon },
-        { title: 'Total Revenue', value: currency + dashboardData.revenue, icon: CircleDollarSignIcon },
-        { title: 'Total Orders', value: dashboardData.orders, icon: TagsIcon },
-        { title: 'Total Stores', value: dashboardData.stores, icon: StoreIcon },
-    ]
+  if (loading.products || loading.orders || loading.users) {
+    return <Loading />;
+  }
 
-    const fetchDashboardData = async () => {
-        setDashboardData(dummyAdminDashboardData)
-        setLoading(false)
-    }
-
-    useEffect(() => {
-        fetchDashboardData()
-    }, [])
-
-    if (loading) return <Loading />
+  if (error.products || error.orders || error.users) {
+    return (
+      <div className="p-4 text-red-500">
+        Erreur lors du chargement des données
+      </div>
+    );
+  }
 
     return (
         <div className="text-slate-500">
@@ -56,7 +74,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Area Chart */}
-            <OrdersAreaChart allOrders={dashboardData.allOrders} />
+            <OrdersAreaChart allOrders={orders} />
         </div>
     )
 }

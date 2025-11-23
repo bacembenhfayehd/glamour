@@ -1,7 +1,7 @@
 import orderServices from "../services/order-services.js";
 import helpers from "../utils/helpers.js";
 
-const { successResponse } = helpers;
+const { successResponse , AppError } = helpers;
 
 export const orderController = {
   // Créer une nouvelle commande

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import AboutModal from "./AboutModal";
 
 
 const AuthModal = ({ isOpen, onClose}) => {
@@ -275,7 +276,7 @@ const Navbar = () => {
                     <div className="hidden sm:flex items-center gap-4 lg:gap-8 text-slate-600">
                         <Link href="/">Accueil</Link>
                         <Link href="/shop">Boutique</Link>
-                        <Link href="/">A propos</Link>
+                        <AboutModal/>
                         <Link href="/">Contact</Link>
 
                         <form onSubmit={handleSearch} className="hidden xl:flex items-center w-xs text-sm gap-2 bg-slate-100 px-4 py-3 rounded-full">

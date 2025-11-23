@@ -1,9 +1,11 @@
 import AdminLayout from "@/components/admin/AdminLayout";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
+import { AdminProvider } from "@/context/AdminContext";
 
 export const metadata = {
-    title: "GoCart. - Admin",
-    description: "GoCart. - Admin",
+    title: "glamour. - Admin",
+    description: "glamour. - Admin",
 };
 
 export default function RootAdminLayout({ children }) {
@@ -13,7 +15,10 @@ export default function RootAdminLayout({ children }) {
             <body>
                  <>
             <AdminLayout>
+                <AdminProvider>
+                <Toaster/>
                 {children}
+                </AdminProvider>
             </AdminLayout>
         </>
                 
