@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AboutModal from "./AboutModal";
+import { fetchProducts } from "@/lib/features/product/productSlice";
+import SearchModal from "./SearchModal";
 
 
 const AuthModal = ({ isOpen, onClose}) => {
@@ -242,6 +244,11 @@ const Navbar = () => {
     const [search, setSearch] = useState('')
     const cartCount = useSelector(state => state.cart.itemCount)
     const { isAuthenticated, user } = useSelector(state => state.auth);
+    const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+    useEffect(() => {
+    dispatch(fetchProducts());
+    }, [dispatch]);
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
@@ -279,10 +286,14 @@ const Navbar = () => {
                         <AboutModal/>
                         <Link href="/">Contact</Link>
 
-                        <form onSubmit={handleSearch} className="hidden xl:flex items-center w-xs text-sm gap-2 bg-slate-100 px-4 py-3 rounded-full">
-                            <Search size={18} className="text-slate-600" />
-                            <input className="w-full bg-transparent outline-none placeholder-slate-600" type="text" placeholder="Rechercher des produits" value={search} onChange={(e) => setSearch(e.target.value)} required />
-                        </form>
+                       <button 
+    onClick={() => setIsSearchModalOpen(true)}
+    className="hidden xl:flex items-center w-xs text-sm gap-2 bg-slate-100 px-4 py-3 rounded-full hover:bg-slate-200 transition-colors cursor-pointer"
+>
+    <Search size={18} className="text-slate-600" />
+    <span className="text-slate-600">Rechercher des produits</span>
+</button>
+
 
                         <Link href="/cart" className="relative flex items-center gap-2 text-slate-600">
                             <ShoppingCart size={18} />
@@ -318,6 +329,11 @@ const Navbar = () => {
                 onClose={() => setIsModalOpen(false)} 
                 initialMode="signup"
             />
+
+            <SearchModal 
+    isOpen={isSearchModalOpen} 
+    onClose={() => setIsSearchModalOpen(false)} 
+/>
         </>
     )
 }

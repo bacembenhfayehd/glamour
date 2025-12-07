@@ -49,7 +49,7 @@ import { fetchProducts } from "@/lib/features/product/productSlice"
     return (
         <div className="min-h-[70vh] mx-6">
             <div className=" max-w-7xl mx-auto">
-                <h1 onClick={() => router.push('/shop')} className="text-2xl text-slate-500 my-6 flex items-center gap-2 cursor-pointer"> {search && <MoveLeftIcon size={20} />}  All <span className="text-slate-700 font-medium">Products</span></h1>
+                <h1 onClick={() => router.push('/shop')} className="text-2xl text-slate-500 my-6 flex items-center gap-2 cursor-pointer"> {search && <MoveLeftIcon size={20} />}  Tous les <span className="text-slate-700 font-medium">Produits</span></h1>
                 <div className="mb-8 space-y-4">
     {/* Main Category Filter */}
     <div>

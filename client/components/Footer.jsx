@@ -12,29 +12,29 @@ const Footer = () => {
 
     const linkSections = [
         {
-            title: "PRODUCTS",
+            title: "PRODUITS",
             links: [
-                { text: "Earphones", path: '/', icon: null },
-                { text: "Headphones", path: '/', icon: null },
-                { text: "Smartphones", path: '/', icon: null },
-                { text: "Laptops", path: '/', icon: null },
+                { text: "Baskets homme", path: '/', icon: null },
+                { text: "Baskets femme", path: '/', icon: null },
+                { text: "Baskets enfant", path: '/', icon: null },
+                { text: "Accessoires", path: '/', icon: null },
             ]
         },
         {
-            title: "WEBSITE?",
+            title: "SITE ?",
             links: [
-                { text: "Home", path: '/', icon: null },
-                { text: "Privacy Policy", path: '/', icon: null },
-                { text: "Become Plus Member", path: '/pricing', icon: null },
-                { text: "Create Your Store", path: '/create-store', icon: null },
+                { text: "Accueil", path: '/', icon: null },
+                { text: "Politique de confidentialité", path: '/', icon: null },
+                { text: "Devenir membre Plus", path: '/pricing', icon: null },
+                
             ]
         },
         {
             title: "CONTACT",
             links: [
-                { text: "+1-212-456-7890", path: '/', icon: MailIcon },
-                { text: "contact@example.com", path: '/', icon: PhoneIcon },
-                { text: "794 Francisco, 94102", path: '/', icon: MapPinIcon }
+                { text: "+1-216-20-822221", path: '/', icon: MailIcon },
+                { text: "contact@glamour.com", path: '/', icon: PhoneIcon },
+                { text: "Gabès, 94102", path: '/', icon: MapPinIcon }
             ]
         }
     ];
@@ -52,9 +52,9 @@ const Footer = () => {
                 <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-slate-500/30 text-slate-500">
                     <div>
                         <Link href="/" className="text-4xl font-semibold text-slate-700">
-                            <span className="text-green-600">go</span>cart<span className="text-green-600 text-5xl leading-0">.</span>
+                            <span className="text-green-600">gla</span>mour<span className="text-green-600 text-5xl leading-0">.</span>
                         </Link>
-                        <p className="max-w-[410px] mt-6 text-sm">Welcome to gocart, your ultimate destination for the latest and smartest gadgets. From smartphones and smartwatches to essential accessories, we bring you the best in innovation — all in one place.</p>
+                        <p className="max-w-[410px] mt-6 text-sm">Bienvenue sur glamour, votre destination ultime pour les espadrilles et baskets tendance. Des modèles homme, femme et enfant aux accessoires indispensables, nous vous proposons le meilleur pour allier style et confort le tout en un seul endroit.</p>
                         <div className="flex items-center gap-3 mt-5">
                             {socialIcons.map((item, i) => (
                                 <Link href={item.link} key={i} className="flex items-center justify-center w-10 h-10 bg-slate-100 hover:scale-105 hover:border border-slate-300 transition rounded-full">
@@ -80,7 +80,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <p className="py-4 text-sm text-slate-500">
-                    Copyright 2025 © gocart All Right Reserved.
+                    Droits d’auteur 2025 © glamour. Tous droits réservés.
                 </p>
             </div>
         </footer>

@@ -19,6 +19,10 @@ const ProductDetails = ({ product }) => {
 const loading = useSelector(state => state.cart.loading);
 const error = useSelector(state => state.cart.error);
     const dispatch = useDispatch();
+    const [stockStatus, setStockStatus] = useState({
+    isLow: product.stock > 0 && product.stock <= 100,
+    isOut: product.stock === 0
+});
 
     const router = useRouter()
 
@@ -73,19 +77,46 @@ const error = useSelector(state => state.cart.error);
                     <p>Économisez {((mrp - product.price) / mrp * 100).toFixed(0)}% dès maintenant</p>
                 </div>
                 <div className="flex items-end gap-5 mt-10">
-                    {
-                        cart[productId] && (
-                            <div className="flex flex-col gap-3">
-                                <p className="text-lg text-slate-800 font-semibold">Quantité</p>
-                                <Counter productId={productId} product={product} />
-                            </div>
-                        )
-                    }
-                    <button onClick={() => !cart[productId] ? addToCartHandler() : router.push('/cart')} disabled={loading || product.stock === 0} className="bg-slate-800 text-white px-10 py-3 text-sm font-medium rounded hover:bg-slate-900 active:scale-95 transition">
-                        {loading ? 'Chargement...' : (!cart[productId] ? 'Ajouter au panier' : 'Voir le panier')}
-                    </button>
+    {cart[productId] && (
+        <div className="flex flex-col gap-3">
+            <p className="text-lg text-slate-800 font-semibold">Quantité</p>
+            <Counter productId={productId} product={product} />
+        </div>
+    )}
+    
+    <button 
+        onClick={() => !cart[productId] ? addToCartHandler() : router.push('/cart')} 
+        disabled={loading || stockStatus.isOut} 
+        className={`px-10 py-3 text-sm font-medium rounded transition ${
+            stockStatus.isOut 
+                ? 'bg-slate-300 text-slate-500 cursor-not-allowed' 
+                : 'bg-slate-800 text-white hover:bg-slate-900 active:scale-95'
+        }`}
+    >
+        {loading ? 'Chargement...' : (
+            stockStatus.isOut ? 'Rupture de stock' : (
+                !cart[productId] ? 'Ajouter au panier' : 'Voir le panier'
+            )
+        )}
+    </button>
                     {error && (
   <p className="text-red-500 text-sm mt-2">{error}</p>
+)}{stockStatus.isOut && (
+    <div className="flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-lg mt-4">
+        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+        <p className="text-sm text-red-600 font-medium">
+            Produit actuellement indisponible
+        </p>
+    </div>
+)}
+
+{stockStatus.isLow && !stockStatus.isOut && (
+    <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 border border-orange-200 rounded-lg mt-4">
+        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+        <p className="text-sm text-orange-600 font-medium">
+            Plus que {product.stock} en stock - Commandez vite !
+        </p>
+    </div>
 )}
                 </div>
                 <hr className="border-gray-300 my-5" />
