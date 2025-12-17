@@ -95,23 +95,37 @@ export function AdminProvider({ children }) {
     }
   }, []);
 
-  const updateOrderStatus = useCallback(async (orderId, status) => {
-    try {
-      const response = await adminApi.updateOrderStatus(orderId, status);
-      
-      // Mettre à jour la commande dans l'état local
-      setOrders(prev => 
-        prev.map(order => 
-          order._id === orderId ? { ...order, status } : order
-        )
-      );
-      
-      return response;
-    } catch (err) {
-      handleError('orders', err);
-      throw err;
+  
+
+  const updateOrderStatus = async (orderId, status) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/admin/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Erreur lors de la mise à jour');
     }
-  }, []);
+
+    const data = await response.json();
+    
+    // Update local state
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order._id === orderId ? { ...order, status } : order
+      )
+    );
+    
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 
   // ==================== USERS ====================
   const fetchUsers = useCallback(async (filters = {}) => {
@@ -196,6 +210,7 @@ export function AdminProvider({ children }) {
     fetchUsers,
     fetchUsersAnalytics,
     fetchDashboardData,
+    updateOrderStatus
   };
 
   return (

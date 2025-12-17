@@ -5,12 +5,22 @@ import { orderDummyData } from "@/assets/assets";
 import { useAdmin } from "@/context/AdminContext";
 
 export default function StoreOrders() {
-  const { orders, loading, error, fetchOrders } = useAdmin();
+  const { orders, loading, error, fetchOrders,updateOrderStatus } = useAdmin();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const updateOrderStatus = async (orderId, status) => {
-    // Logic to update the status of an order
+  const handleUpdateOrderStatus = async (orderId, status) => {
+    try {
+      await updateOrderStatus(orderId, status);
+      toast.success("Statut mis à jour avec succès");
+      
+      // Update selected order if modal is open
+      if (selectedOrder && selectedOrder._id === orderId) {
+        setSelectedOrder(prev => ({ ...prev, status }));
+      }
+    } catch (error) {
+      toast.error(error.message || "Erreur lors de la mise à jour");
+    }
   };
 
   const openModal = (order) => {
@@ -82,7 +92,7 @@ export default function StoreOrders() {
                     <select
                       value={order.status}
                       onChange={(e) =>
-                        updateOrderStatus(order.id, e.target.value)
+                        updateOrderStatus(order._id, e.target.value)
                       }
                       className="border-gray-300 rounded-md text-sm focus:ring focus:ring-blue-200"
                     >

@@ -1,11 +1,11 @@
 "use client";
 import { assets } from "@/assets/assets";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 export default function StoreAddProduct() {
-  const categories = ["Homme", "Femme", "Enfant"];
+const categories = ["Homme", "Femme", "Enfant"];
   const souscategories = [
     "Sport",
     "Casual",
@@ -30,52 +30,66 @@ export default function StoreAddProduct() {
   const [loading, setLoading] = useState(false);
 
   const compressImage = (file) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target.result;
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        let width = img.width;
-        let height = img.height;
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
 
-        // Réduire les dimensions si trop grande
-        const maxWidth = 1024;
-        const maxHeight = 1024;
-        if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width;
-            width = maxWidth;
+          // Réduire les dimensions si trop grande
+          const maxWidth = 1024;
+          const maxHeight = 1024;
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
           }
-        } else {
-          if (height > maxHeight) {
-            width *= maxHeight / height;
-            height = maxHeight;
-          }
-        }
 
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
 
-        canvas.toBlob(
-          (blob) => {
-            const compressedFile = new File([blob], file.name, {
-              type: "image/jpeg",
-              lastModified: Date.now(),
-            });
-            resolve(compressedFile);
-          },
-          "image/jpeg",
-          0.7 // 70% qualité
-        );
+          canvas.toBlob(
+            (blob) => {
+              const compressedFile = new File([blob], file.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            },
+            "image/jpeg",
+            0.7 // 70% qualité
+          );
+        };
       };
-    };
-  });
-};
+    });
+  };
+
+  // ⭐ NEW: Handler for image uploads with compression
+  const handleImageChange = async (e, key) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const compressedFile = await compressImage(file);
+        setImages({ ...images, [key]: compressedFile });
+      } catch (error) {
+        toast.error("Erreur lors de la compression de l'image");
+        console.error(error);
+      }
+    }
+  };
 
   const createProduct = async (productData, imageFiles) => {
     const formData = new FormData();
@@ -157,7 +171,7 @@ export default function StoreAddProduct() {
       <div htmlFor="" className="flex gap-3 mt-4">
         {Object.keys(images).map((key) => (
           <label key={key} htmlFor={`images${key}`}>
-            <Image
+            <NextImage
               width={300}
               height={300}
               className="h-15 w-auto border border-slate-200 rounded cursor-pointer"
@@ -172,9 +186,7 @@ export default function StoreAddProduct() {
               type="file"
               accept="image/*"
               id={`images${key}`}
-              onChange={(e) =>
-                setImages({ ...images, [key]: e.target.files[0] })
-              }
+              onChange={(e) => handleImageChange(e, key)}
               hidden
             />
           </label>
