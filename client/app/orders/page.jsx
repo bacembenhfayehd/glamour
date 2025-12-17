@@ -10,16 +10,29 @@ export default function Orders() {
 
     const dispatch = useDispatch();
     const { userOrders, userOrdersPagination, loading, error } = useSelector(state => state.orders);
+    const { isAuthenticated } = useSelector(state => state.auth); // Ajouter cette ligne
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
-        dispatch(getUserOrders({ 
-            page: currentPage, 
-            limit: 10,
-            sortBy: 'createdAt',
-            sortOrder: 'desc'
-        }));
-    }, [dispatch, currentPage]);
+        // Vérifier si l'utilisateur est connecté avant de charger les commandes
+        if (isAuthenticated) {
+            dispatch(getUserOrders({ 
+                page: currentPage, 
+                limit: 10,
+                sortBy: 'createdAt',
+                sortOrder: 'desc'
+            }));
+        }
+    }, [dispatch, currentPage, isAuthenticated]); // Ajouter isAuthenticated
+
+    // Vérifier si l'utilisateur n'est pas connecté
+    if (!isAuthenticated) {
+        return (
+            <div className="min-h-[70vh] mx-6 flex items-center justify-center">
+                <h1 className="text-2xl text-slate-400">Vous n'êtes pas connecté. Vous devez vous connecter d'abord.</h1>
+            </div>
+        );
+    }
 
     if (loading) {
         return (

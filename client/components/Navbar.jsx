@@ -284,7 +284,7 @@ const Navbar = () => {
                         <Link href="/">Accueil</Link>
                         <Link href="/shop">Boutique</Link>
                         <AboutModal/>
-                        <Link href="/">Contact</Link>
+                        <Link href="/orders">Commandes</Link>
 
                        <button 
     onClick={() => setIsSearchModalOpen(true)}
