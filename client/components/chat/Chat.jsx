@@ -9,43 +9,49 @@ function Chat() {
   const [chatHistory, setChatHistory] = useState([]);
   const [showChatBot, setShowChatBot] = useState(false);
   const chatBodyRef = useRef();
-  const generateBotResponse = async (history) => {
-    const updateHistory = (text) => {
-      setChatHistory((prev) => [
-        ...prev.filter((msg) => msg.text !== "Thinking..."),
-        { role: "model", text },
-      ]);
-    };
-
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: history.map(({ role, text }) => ({
-          role,
-          parts: [{ text }],
-        })),
-      }),
-    };
-
-    try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_GEMINI_API_URL,
-        requestOptions
-      );
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "something went wrong!");
-
-      //clean and update the chat history with bot response
-
-      const apiResponse = data.candidates[0].content.parts[0].text
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .trim();
-      updateHistory(apiResponse);
-    } catch (error) {
-      console.error(error);
-    }
+const generateBotResponse = async (history) => {
+  const updateHistory = (text, isError = false) => {
+    setChatHistory((prev) => [
+      ...prev.filter((msg) => msg.text !== "Thinking..."),
+      { role: "model", text, isError },
+    ]);
   };
+
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`;
+
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: history.map(({ role, text }) => ({
+        role,
+        parts: [{ text }],
+      })),
+    }),
+  };
+
+  try {
+    const response = await fetch(apiUrl,
+      requestOptions
+    );
+    const data = await response.json();
+    
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error("Trop de requêtes. Veuillez patienter quelques instants.");
+      }
+      throw new Error(data.error?.message || "Une erreur s'est produite");
+    }
+
+    const apiResponse = data.candidates[0].content.parts[0].text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .trim();
+    updateHistory(apiResponse);
+  } catch (error) {
+    console.error(error);
+    updateHistory(error.message, true);
+  }
+};
 
   useEffect(() => {
     chatBodyRef.current.scrollTo({

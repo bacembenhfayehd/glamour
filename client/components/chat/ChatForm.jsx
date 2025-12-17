@@ -5,31 +5,31 @@ import React, { useRef } from "react";
 function ChatForm({ setChatHistory, generateBotResponse, chatHistory }) {
   const inputRef = useRef();
 
-  const handelFormSubmit = (e) => {
-    e.preventDefault();
-    const clientMessage = inputRef.current.value.trim();
-    if (!clientMessage) return;
-    inputRef.current.value = "";
+ const handelFormSubmit = (e) => {
+  e.preventDefault();
+  const clientMessage = inputRef.current.value.trim();
+  if (!clientMessage) return;
+  inputRef.current.value = "";
 
-    //update chat history with client message
+  // Créer le nouvel historique avec le message utilisateur
+  const updatedHistory = [
+    ...chatHistory,
+    { role: "user", text: clientMessage }
+  ];
+
+  // Update chat history with client message
+  setChatHistory(updatedHistory);
+
+  // Add thinking for bot response
+  setTimeout(() => {
     setChatHistory((history) => [
       ...history,
-      { role: "user", text: clientMessage },
+      { role: "model", text: "Thinking..." },
     ]);
-
-    // add thinking for bot response
-
-    setTimeout(() => {
-      setChatHistory((history) => [
-        ...history,
-        { role: "model", text: "Thinking..." },
-      ]);
-      generateBotResponse(
-        [...chatHistory, { role: "user", text: clientMessage }],
-        setChatHistory
-      );
-    }, 600);
-  };
+    // Utiliser updatedHistory au lieu de chatHistory
+    generateBotResponse(updatedHistory);
+  }, 600);
+};
   return (
     <form action="" className="chat-form" onSubmit={handelFormSubmit}>
       <input
